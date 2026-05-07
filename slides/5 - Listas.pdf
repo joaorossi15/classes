@@ -1,0 +1,108 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct lista Lista;
+
+typedef struct listano ListaNo;
+struct lista {
+  ListaNo *prim;
+};
+
+struct listano {
+  int item;
+  ListaNo *prox;
+};
+
+Lista *cria(void) {
+  Lista *l = (Lista *)malloc(sizeof(Lista));
+  l->prim = NULL;
+  return l;
+}
+
+void insere(Lista *l, int v) {
+  ListaNo *novo = (ListaNo *)malloc(sizeof(ListaNo));
+  novo->item = v;
+  novo->prox = l->prim;
+  l->prim = novo;
+}
+
+int vazia(Lista *l) { return (l->prim == NULL); }
+
+void imprime(Lista *l) {
+  for (ListaNo *p = l->prim; p != NULL; p = p->prox) {
+    printf("item = %d\n", p->item);
+  }
+}
+
+int percorre(Lista *l, int v) {
+  for (ListaNo *p = l->prim; p != NULL; p = p->prox) {
+    if (p->item == v)
+      return 1;
+  }
+  return 0;
+}
+
+void rm(Lista *l, int v) {
+  ListaNo *ant = NULL;
+  ListaNo *p = l->prim;
+  while (p != NULL && p->item != v) {
+    ant = p;
+    p = p->prox;
+  }
+  if (p != NULL) {
+    if (ant == NULL) {
+      l->prim = p->prox;
+    } else {
+      ant->prox = p->prox;
+    }
+    free(p);
+  }
+}
+
+void insereFim(Lista *l, int v) {
+  ListaNo *novo = malloc(sizeof(ListaNo));
+
+  if (novo == NULL)
+    return;
+
+  novo->item = v;
+  novo->prox = NULL;
+
+  if (l->prim == NULL) {
+    l->prim = novo;
+    return;
+  }
+
+  ListaNo *p = l->prim;
+
+  while (p->prox != NULL) {
+    p = p->prox;
+  }
+
+  p->prox = novo;
+}
+
+void libera(Lista *l) {
+  ListaNo *p = l->prim;
+  while (p != NULL) {
+    ListaNo *t = p->prox;
+    free(p);
+    p = t;
+  }
+  free(l);
+}
+
+int main(void) {
+  Lista *l = cria();
+  insere(l, 23);
+  insere(l, 45);
+  insere(l, 56);
+  insere(l, 78);
+  imprime(l);
+  rm(l, 78);
+  imprime(l);
+  rm(l, 45);
+  imprime(l);
+  libera(l);
+  return 0;
+}
