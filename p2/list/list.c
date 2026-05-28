@@ -15,6 +15,26 @@ void insert(List *l, int v) {
   l->head = tmp;
 }
 
+void push(List *list, int value) {
+  Node *new = malloc(sizeof(Node));
+
+  new->value = value;
+  new->next = NULL;
+
+  if (list->head == NULL) {
+    list->head = new;
+    return;
+  }
+
+  Node *p = list->head;
+
+  while (p->next != NULL) {
+    p = p->next;
+  }
+
+  p->next = new;
+}
+
 void print_list(List *l) {
   printf("LIST: ");
   for (Node *tmp = l->head; tmp != NULL; tmp = tmp->next)
